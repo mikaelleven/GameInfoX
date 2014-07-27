@@ -46,6 +46,10 @@ end
 
 --GI.Update2 = GI.Update
 
+function GameInfoX.WarnNumberAndColorizeText(text, number, warnTreshold, criticalTreshold)
+
+end
+
 
 function GameInfoX.Update()
 	--GI.Update2()
