@@ -1,0 +1,16 @@
+
+Feature requests:
+ ☐ Remove dependency from GameInfo
+ ☐ Tweak Loot info with colors, alpha and stack info
+ ☐ Add XP info at exp-bar, auto-hide text after n secs
+ ☐ Change visual style of gold loot
+ ☐ Add visual guidance (warning) for inventory status (full etc)
+
+Known issues:
+
+Version 1.0:
+ ✔ Add trasparency to GameInfo Bag (icon and text) @done (14-07-27 15:01)
+ ✔ Disable auto-hide of Bag from GI @done (14-07-27 15:01)
+ ✔ Fix bug with Bank info not getting updated @done (14-07-27 15:01)
+ ✔ Remove the dependency of SavedVariables for Bank info @done (14-07-27 15:01)
+

@@ -1,0 +1,30 @@
+<GuiXml>
+    <Controls>
+        <TopLevelControl name="GameInfoXDisplay" mouseEnabled="true" movable="true" clampedToScreen="true">
+			<Dimensions x="90" y="40" /><Anchor point="CENTER" />
+			<OnUpdate>GameInfoX.Update()</OnUpdate>
+			<OnMoveStop>GameInfoX.MoveStop()</OnMoveStop>
+			<Controls>
+				<!-- <Texture name="$(parent)Bag">
+					<Dimensions x="40" y="40"></Dimensions>
+					<Anchor point="TOPLEFT" offsetX="0" offsetY="0"></Anchor>
+				</Texture>
+				<Label name="$(parent)Count" 
+					font="ZoFontGameBold" 
+					color="FFFFFF" 
+					wrapMode="ELLIPSIS" 
+					verticalAlignment="CENTER" 
+					text="00/00">
+					<Anchor point="TOPLEFT" relativeTo="GameInfoDisplayBag" relativePoint="TOPRIGHT" offsetX="0" offsetY="20"></Anchor>jjjj</Label> -->
+				<Texture name="$(parent)Bank">
+					<Dimensions x="20" y="20"></Dimensions>
+					<Anchor point="TOPLEFT" relativeTo="GameInfoDisplayBag" offsetX="10" offsetY="32"></Anchor>
+				</Texture>
+				<Label name="$(parent)BankCount" font="ZoFontGameBold" color="FFFFFF" wrapMode="ELLIPSIS" verticalAlignment="CENTER" text="*/*">
+					<Anchor point="TOPLEFT" relativeTo="GameInfoDisplayBag" relativePoint="TOPRIGHT" offsetX="0" offsetY="32"></Anchor>
+				</Label>
+			</Controls>
+        </TopLevelControl>
+
+    </Controls>
+</GuiXml>
