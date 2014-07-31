@@ -10,12 +10,12 @@
 -------------------------------------------------------------------------------
 
 -- First, we create a namespace for our addon by declaring a top-level table that will hold everything else.
-GameInfoX = {}
+if not GameInfoX then GameInfoX = {} end 
 
 GameInfoX.Addon = {
 	Name = "GameInfoX",
 	Title = "GameInfo eXtended",
-	Version = "1.0",
+	Version = "1.1",
 	Author = "@w33zl",
 	Description = ""
 }
@@ -27,35 +27,18 @@ GameInfoX.DefaultSettings = {
 	InventoryColor = "C5C29EFF",
 }
  
---[[
-GameInfoX.name = "GameInfoX"
-GameInfoX.version = "1.0"
-GameInfoX.description = ""
-GameInfoX.author = "@w33zl"
---]]
-
-
-
 function GameInfoX.MoveStop()
-end
-
-function GameInfoX.LootMessage(eventId, bagId, slotId, isNewItem, itemSoundCategory, updateReason)
-	-- if (GI.loaded == true) then
-	-- 	if(GI.vars.LootMsg==true) then
-	-- 		if (isNewItem==true) then
-	-- 			GI.QueuedLootindex=GI.QueuedLootindex+1
-	-- 			GI.QueuedLoot[GI.QueuedLootindex]=GI.strStrip(GetItemLink(bagId, slotId,LINK_STYLE_BRACKETS))
-	-- 		end
-	-- 	end
-	-- end
 end
 
 function GameInfoX.WarnNumberAndColorizeText(text, number, warnTreshold, criticalTreshold)
 end
 
 function GameInfoX.Update()
+	
+
 	if (GI.loaded == true) then
-		if (GI.UpdateThrottle("UpdateX", 400) == true) then
+		if (GI.UpdateThrottle("UpdateX", 800) == true) then
+			GI.Update()
 			local usedSlots, maxSlots=PLAYER_INVENTORY:GetNumSlots(INVENTORY_BACKPACK)
 			local usedBankSlots, maxBankSlots2=PLAYER_INVENTORY:GetNumSlots(INVENTORY_BANK)
 			local bankIcon, maxBankSlots = GetBagInfo(BAG_BANK)
@@ -68,13 +51,43 @@ function GameInfoX.Update()
 				end
 				itemCounter = itemCounter + 1
 			end
-			GameInfoXDisplayBankCount:SetText(numberOfUsedBankSlots .." / ".. maxBankSlots)
-			--GameInfoXDisplayBankCount:SetText(usedBankSlotsLabel .." / ".. maxBankSlots .. " / " .. nUsed)
-			--GameInfoXDisplayBankCount:SetText("|cFFFFFF" .. usedBankSlotsLabel .." / ".. maxBankSlots .. "|r" .. " / " .. x)
+
+			local warnThreshold = 5
+			local defaultColor = "FFFFFF" --GI.vars.ColorLoot
+			
+			local bankColor
+			if numberOfUsedBankSlots == maxBankSlots then
+				bankColor = "C08C8B"
+			elseif (maxBankSlots - numberOfUsedBankSlots ) <= warnThreshold then
+				bankColor = "B5AB7B"
+			end
+
+			local bagColor
+			if usedSlots == maxSlots then
+				bagColor = "C08C8B"
+			elseif (maxSlots - usedSlots ) <= warnThreshold then
+				bagColor = "B5AB7B"
+			end
+
+			local bankSlotText
+			if bankColor == nil then
+				bankSlotText = numberOfUsedBankSlots
+			else
+				bankSlotText =  GI.ColorStart(bankColor) .. numberOfUsedBankSlots .. "|r"
+			end
+
+			local bagSlotText
+			if bagColor == nil then
+				bagSlotText = usedSlots
+			else
+				bagSlotText =  GI.ColorStart(bagColor) .. usedSlots .. "|r"
+			end
+
+			GameInfoXDisplayBankCount:SetText(bankSlotText .. " / ".. maxBankSlots)
+			GameInfoDisplayCount:SetText(bagSlotText .. " / ".. maxSlots)
 
 			GameInfoXDisplay:SetAlpha(0.5)
-			GameInfoDisplayBag:SetAlpha(0.5)
-			GameInfoDisplayCount:SetAlpha(0.5)
+			GameInfoDisplay:SetAlpha(0.5)
 
 		end
 	end
@@ -82,9 +95,13 @@ end
 
 -- Next we create a function that will initialize our addon
 function GameInfoX:Initialize()
+	-- Initialize bank icon
  	GameInfoXDisplayBank:SetTexture("ESOUI/art/icons/servicemappins/servicepin_bank.dds")
 
+ 	-- Override original update handler from GameInfo to be able to adjust some behaviors
+ 	GameInfoDisplay:SetHandler("OnUpdate", GameInfoX.Update)
 
+ 	-- We are all set!
 	d(GameInfoX.Addon.Name .. " " .. GameInfoX.Addon.Version .. " loaded!")
 end
  
@@ -100,3 +117,4 @@ end
 -- Finally, we'll register our event handler functions to be called when the proper events occurs.
 EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_ADD_ON_LOADED, GameInfoX.OnAddOnLoaded)
 --EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, GameInfoX.LootMessage)
+

@@ -1,16 +1,21 @@
 
 Feature requests:
  ☐ Remove dependency from GameInfo
- ☐ Tweak Loot info with colors, alpha and stack info
+ ☐ Tweak Loot info with colors, alpha/transparency and stack info
  ☐ Add XP info at exp-bar, auto-hide text after n secs
- ☐ Change visual style of gold loot
- ☐ Add visual guidance (warning) for inventory status (full etc)
+ ☐ Change visual style of gold loot 
 
 Known issues:
+ ☐ Tweak the intensity of warn colors to not be intrusive of the game immersion
+
+Version 1.1:
+✔ Add visual guidance (warning) for inventory status (full and nearly full) @done (14-07-31 18:34)
+✔ In some cases the Bag info from GameInfo still gets hidden when opening inv etc @done (14-07-31 18:50)
 
 Version 1.0:
  ✔ Add trasparency to GameInfo Bag (icon and text) @done (14-07-27 15:01)
  ✔ Disable auto-hide of Bag from GI @done (14-07-27 15:01)
  ✔ Fix bug with Bank info not getting updated @done (14-07-27 15:01)
  ✔ Remove the dependency of SavedVariables for Bank info @done (14-07-27 15:01)
+
 

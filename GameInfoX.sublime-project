@@ -4,6 +4,18 @@
 		{
 			"follow_symlinks": true,
 			"path": "GameInfoX"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/mleven/work/ESO AddOns/GameInfo"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/mleven/work/ESO AddOns/mhFramework"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/mleven/work/ESO AddOns/Shopkeeper"
 		}
 	]
 }
