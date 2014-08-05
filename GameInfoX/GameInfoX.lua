@@ -15,7 +15,7 @@ if not GameInfoX then GameInfoX = {} end
 GameInfoX.Addon = {
 	Name = "GameInfoX",
 	Title = "GameInfo eXtended",
-	Version = "1.1",
+	Version = "1.3",
 	Author = "@w33zl",
 	Description = ""
 }
@@ -40,17 +40,24 @@ function GameInfoX.Update()
 		if (GI.UpdateThrottle("UpdateX", 800) == true) then
 			GI.Update()
 			local usedSlots, maxSlots=PLAYER_INVENTORY:GetNumSlots(INVENTORY_BACKPACK)
-			local usedBankSlots, maxBankSlots2=PLAYER_INVENTORY:GetNumSlots(INVENTORY_BANK)
-			local bankIcon, maxBankSlots = GetBagInfo(BAG_BANK)
+			--local usedBankSlots, maxBankSlots2=PLAYER_INVENTORY:GetNumSlots(INVENTORY_BANK)
+			local maxBankSlots = GetBagSize(BAG_BANK)
 
-			local numberOfUsedBankSlots = 0
-			local itemCounter=0
-			while (itemCounter < maxBankSlots) do
-				if GetItemName(BAG_BANK, itemCounter) ~= "" then
-					numberOfUsedBankSlots = numberOfUsedBankSlots + 1
-				end
-				itemCounter = itemCounter + 1
-			end
+			local numberOfUsedBankSlots = GetNumBagUsedSlots(BAG_BANK)
+			-- local itemCounter=0
+			-- while (itemCounter < maxBankSlots) do
+			-- 	if GetItemName(BAG_BANK, itemCounter) ~= "" then
+			-- 		numberOfUsedBankSlots = numberOfUsedBankSlots + 1
+			-- 	end
+			-- 	itemCounter = itemCounter + 1
+			-- end
+
+-- v1.3 fix
+-- GetNumBagFreeSlots
+-- GetNumBagUsedSlots
+-- GetItemLinkName
+-- GetBagSize
+
 
 			local warnThreshold = 5
 			local defaultColor = "FFFFFF" --GI.vars.ColorLoot
