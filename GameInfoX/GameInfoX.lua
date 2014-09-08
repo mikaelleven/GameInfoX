@@ -15,7 +15,7 @@ if not GameInfoX then GameInfoX = {} end
 GameInfoX.Addon = {
 	Name = "GameInfoX",
 	Title = "GameInfo eXtended",
-	Version = "1.3",
+	Version = "1.4",
 	Author = "@w33zl",
 	Description = ""
 }
@@ -108,4 +108,9 @@ end
 -- Finally, we'll register our event handler functions to be called when the proper events occurs.
 EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_ADD_ON_LOADED, GameInfoX.OnAddOnLoaded)
 --EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, GameInfoX.LootMessage)
+
+-- Register slash commands
+SLASH_COMMANDS["/rl"] = function() ReloadUI("ingame") end
+SLASH_COMMANDS["/mem"] = function() d(math.ceil(collectgarbage("count")).." KB") end
+
 

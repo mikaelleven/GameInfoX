@@ -3,8 +3,8 @@
 ## Description: Extends the |cC5C29EGameInfo|r addon with bank slots and other tweaks of the behavior
 ## License: 
 
-## Version: 1.3
-## LastUpdated: August 5, 2014
+## Version: 1.4
+## LastUpdated: September 6, 2014
 
 ## APIVersion: 100008
 

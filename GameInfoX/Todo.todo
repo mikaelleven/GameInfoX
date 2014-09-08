@@ -9,12 +9,16 @@ Known issues:
  ☐ Tweak the intensity of warn colors to not be intrusive of the game immersion
  ☐ The plugin may interfere with the Lockpick functionality
 
+Version 1.4:
+ ✔ Added slash command /mem to show LUA memory usage @done (14-09-06 17:32)
+ ✔ Added slash command /rl to reload ui @done (14-09-06 17:33)
+
 Version 1.3:
  ✔ Fixes for the 1.3.3 patch @done (14-08-05 12:18)
 
 Version 1.1:
-✔ Add visual guidance (warning) for inventory status (full and nearly full) @done (14-07-31 18:34)
-✔ In some cases the Bag info from GameInfo still gets hidden when opening inv etc @done (14-07-31 18:50)
+ ✔ Add visual guidance (warning) for inventory status (full and nearly full) @done (14-07-31 18:34)
+ ✔ In some cases the Bag info from GameInfo still gets hidden when opening inv etc @done (14-07-31 18:50)
 
 Version 1.0:
  ✔ Add trasparency to GameInfo Bag (icon and text) @done (14-07-27 15:01)
