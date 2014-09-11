@@ -9,8 +9,13 @@
 -- States and/or other countries. All rights reserved.						  -
 -------------------------------------------------------------------------------
 
+
 -- First, we create a namespace for our addon by declaring a top-level table that will hold everything else.
 if not GameInfoX then GameInfoX = {} end 
+
+-- -- LUA linter fake
+-- GameInfoX = {}
+-- local GameInfoX = GameInfoX
 
 GameInfoX.Addon = {
 	Name = "GameInfoX",
@@ -26,6 +31,7 @@ GameInfoX.DefaultSettings = {
 	InventoryTransparency = 80,
 	InventoryColor = "C5C29EFF",
 }
+
  
 function GameInfoX.MoveStop()
 end
@@ -33,11 +39,46 @@ end
 function GameInfoX.WarnNumberAndColorizeText(text, number, warnTreshold, criticalTreshold)
 end
 
+function GameInfoX:HideUI()
+	if not GameInfoXDisplay:IsHidden() then
+		GameInfoXDisplay:SetHidden(true)
+	end
+	if not GameInfoDisplay:IsHidden() then
+		GameInfoDisplay:SetHidden(true)
+	end
+end
+
+function GameInfoX:ShowUI()
+	if GameInfoXDisplay:IsHidden() then
+		GameInfoXDisplay:SetHidden(false)
+	end
+	if GameInfoDisplay:IsHidden() then
+		GameInfoDisplay:SetHidden(false)
+	end
+end
+
+function GameInfoX:BackgroundRefresh()
+	if GameInfoX.ShouldBeHidden() then
+		GameInfoX:HideUI()
+	else
+		GameInfoX:ShowUI()
+	end
+
+	zo_callLater(function() GameInfoX:BackgroundRefresh() end, 200)
+end
+
+
 function GameInfoX.Update()
 	
 
 	if (GI.loaded == true) then
-		if (GI.UpdateThrottle("UpdateX", 800) == true) then
+		if (GI.UpdateThrottle("UpdateX", 500) == true) then
+
+			if GameInfoX.ShouldBeHidden() then
+				return
+			end
+
+
 			GI.Update()
 			local usedSlots, maxSlots=PLAYER_INVENTORY:GetNumSlots(INVENTORY_BACKPACK)
 			local maxBankSlots = GetBagSize(BAG_BANK)
@@ -94,6 +135,9 @@ function GameInfoX:Initialize()
 
  	-- We are all set!
 	d(GameInfoX.Addon.Name .. " " .. GameInfoX.Addon.Version .. " loaded!")
+
+
+	zo_callLater(function() GameInfoX:BackgroundRefresh() end, 100)
 end
  
 -- Then we create an event handler function which will be called when the "addon loaded" event
@@ -104,13 +148,32 @@ function GameInfoX.OnAddOnLoaded(event, addonName)
     GameInfoX:Initialize()
   end
 end
+
+--- Check to see if lockpicking window is enabled
+function GameInfoX.ShouldBeHidden()
+	if not LOCK_PICK["control"]:IsHidden() then return true end
+end
+
+function GameInfoX.OnGuiHidden(eventCode, guiName, hidden)
+	--d("Gui hidden")
+end
+
  
 -- Finally, we'll register our event handler functions to be called when the proper events occurs.
 EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_ADD_ON_LOADED, GameInfoX.OnAddOnLoaded)
+EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_GUI_HIDDEN, GameInfoX.OnGuiHidden)
+ 
 --EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, GameInfoX.LootMessage)
+EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_BEGIN_LOCKPICK, function() 
+	--d("Begin lockpick")
+end)
 
 -- Register slash commands
 SLASH_COMMANDS["/rl"] = function() ReloadUI("ingame") end
 SLASH_COMMANDS["/mem"] = function() d(math.ceil(collectgarbage("count")).." KB") end
+
+
+
+
 
 
