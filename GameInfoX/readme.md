@@ -8,6 +8,7 @@ GameInfo eXtended is a tweak on top of the _GameInfo_ addon by _@Sternentau_. In
 - Disables bag info auto-hiding from _GameInfo_ when opening the Bank or Inventory
 - Adds alpha-channel (transparency) to the Bag and Bank information to give it a more subtle look (to limit the interference with the game immersion).
 - Visual guidance for inventory and bank slot status, yellow when nearly full (warning) and red when completely full (critical).
+- Slash commands for LUA memory usage (/mem) and to reload ui (/rl)
 
 ## Planned / requested features
 - Automatically increase opacity of Bag and Bank info when opening the inventory and or the bank
