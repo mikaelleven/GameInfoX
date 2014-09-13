@@ -65,6 +65,8 @@ function GameInfoX:BackgroundRefresh()
 	end
 
 	zo_callLater(function() GameInfoX:BackgroundRefresh() end, 200)
+	--TODO: change to this!:
+	-- EVENT_MANAGER:RegisterForUpdate("CraftStore_E100",2000,function() CS.updateStored() end)
 end
 
 
