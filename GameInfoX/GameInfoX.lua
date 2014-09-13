@@ -13,14 +13,10 @@
 -- First, we create a namespace for our addon by declaring a top-level table that will hold everything else.
 if not GameInfoX then GameInfoX = {} end 
 
--- -- LUA linter fake
--- GameInfoX = {}
--- local GameInfoX = GameInfoX
-
 GameInfoX.Addon = {
 	Name = "GameInfoX",
 	Title = "GameInfo eXtended",
-	Version = "1.4",
+	Version = "1.5",
 	Author = "@w33zl",
 	Description = ""
 }
@@ -30,10 +26,14 @@ GameInfoX.DefaultSettings = {
 	LockWindowPosition = false,
 	InventoryTransparency = 80,
 	InventoryColor = "C5C29EFF",
+	PositionX = 20,
+	PositionY = 200
 }
 
  
 function GameInfoX.MoveStop()
+	GameInfoX.Settings.PositionX = GameInfoXDisplay:GetLeft()
+	GameInfoX.Settings.PositionY = GameInfoXDisplay:GetTop()
 end
 
 function GameInfoX.WarnNumberAndColorizeText(text, number, warnTreshold, criticalTreshold)
@@ -43,45 +43,43 @@ function GameInfoX:HideUI()
 	if not GameInfoXDisplay:IsHidden() then
 		GameInfoXDisplay:SetHidden(true)
 	end
-	if not GameInfoDisplay:IsHidden() then
-		GameInfoDisplay:SetHidden(true)
-	end
 end
 
 function GameInfoX:ShowUI()
 	if GameInfoXDisplay:IsHidden() then
 		GameInfoXDisplay:SetHidden(false)
 	end
-	if GameInfoDisplay:IsHidden() then
-		GameInfoDisplay:SetHidden(false)
-	end
 end
 
-function GameInfoX:BackgroundRefresh()
+-- function GameInfoX:BackgroundRefresh()
+-- 	if GameInfoX.ShouldBeHidden() then
+-- 		GameInfoX:HideUI()
+-- 	else
+-- 		GameInfoX:ShowUI()
+-- 	end
+
+-- 	--zo_callLater(function() GameInfoX:BackgroundRefresh() end, 200)
+	
+-- end
+
+
+
+function GameInfoX:DoRefresh()
+	
 	if GameInfoX.ShouldBeHidden() then
 		GameInfoX:HideUI()
+		return
 	else
 		GameInfoX:ShowUI()
 	end
 
-	zo_callLater(function() GameInfoX:BackgroundRefresh() end, 200)
-	--TODO: change to this!:
-	-- EVENT_MANAGER:RegisterForUpdate("CraftStore_E100",2000,function() CS.updateStored() end)
-end
+	-- if (GI.loaded == true) then
+	-- 	if (GI.UpdateThrottle("UpdateX", 500) == true) then
 
+			-- if GameInfoX.ShouldBeHidden() then
+			-- 	return
+			-- end
 
-function GameInfoX.Update()
-	
-
-	if (GI.loaded == true) then
-		if (GI.UpdateThrottle("UpdateX", 500) == true) then
-
-			if GameInfoX.ShouldBeHidden() then
-				return
-			end
-
-
-			GI.PanelUpdate()
 			local usedSlots, maxSlots=PLAYER_INVENTORY:GetNumSlots(INVENTORY_BACKPACK)
 			local maxBankSlots = GetBagSize(BAG_BANK)
 			local numberOfUsedBankSlots = GetNumBagUsedSlots(BAG_BANK)
@@ -107,39 +105,50 @@ function GameInfoX.Update()
 			if bankColor == nil then
 				bankSlotText = numberOfUsedBankSlots
 			else
-				bankSlotText =  GI.ColorStart(bankColor) .. numberOfUsedBankSlots .. "|r"
+				bankSlotText =  "|c" .. bankColor .. numberOfUsedBankSlots .. "|r"
 			end
 
 			local bagSlotText
 			if bagColor == nil then
 				bagSlotText = usedSlots
 			else
-				bagSlotText =  GI.ColorStart(bagColor) .. usedSlots .. "|r"
+				bagSlotText =  "|c" .. bagColor .. usedSlots .. "|r"
 			end
 
 			GameInfoXDisplayBankCount:SetText(bankSlotText .. " / ".. maxBankSlots)
-			GameInfoDisplayCount:SetText(bagSlotText .. " / ".. maxSlots)
+			GameInfoXDisplayCount:SetText(bagSlotText .. " / ".. maxSlots)
 
 			GameInfoXDisplay:SetAlpha(0.5)
-			GameInfoDisplay:SetAlpha(0.5)
 
-		end
-	end
+	-- 	end
+	-- end
 end
 
 -- Next we create a function that will initialize our addon
 function GameInfoX:Initialize()
 	-- Initialize bank icon
- 	GameInfoXDisplayBank:SetTexture("ESOUI/art/icons/servicemappins/servicepin_bank.dds")
+ 	--GameInfoXDisplayBank:SetTexture("ESOUI/art/icons/servicemappins/servicepin_bank.dds")
+
+
+	GameInfoX.Settings = ZO_SavedVars:New("GIX_Config", 1, nil, GameInfoX.DefaultSettings)
+
+	if GameInfoX.Settings.PositionX and GameInfoX.Settings.PositionY then
+		GameInfoXDisplay:ClearAnchors()
+		GameInfoXDisplay:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, GameInfoX.Settings.PositionX, GameInfoX.Settings.PositionY)
+		GameInfoXDisplay:SetMovable(true)
+	end
+
 
  	-- Override original update handler from GameInfo to be able to adjust some behaviors
- 	GameInfoDisplay:SetHandler("OnUpdate", GameInfoX.Update)
+ 	--GameInfoDisplay:SetHandler("OnUpdate", GameInfoX.Update)
 
  	-- We are all set!
 	d(GameInfoX.Addon.Name .. " " .. GameInfoX.Addon.Version .. " loaded!")
 
 
-	zo_callLater(function() GameInfoX:BackgroundRefresh() end, 100)
+	--zo_callLater(function() GameInfoX:BackgroundRefresh() end, 100)
+
+	EVENT_MANAGER:RegisterForUpdate("GameInfoX_Update",500,function() GameInfoX:DoRefresh() end)
 end
  
 -- Then we create an event handler function which will be called when the "addon loaded" event
@@ -154,6 +163,7 @@ end
 --- Check to see if lockpicking window is enabled
 function GameInfoX.ShouldBeHidden()
 	if not LOCK_PICK["control"]:IsHidden() then return true end
+	return false
 end
 
 function GameInfoX.OnGuiHidden(eventCode, guiName, hidden)
@@ -163,19 +173,14 @@ end
  
 -- Finally, we'll register our event handler functions to be called when the proper events occurs.
 EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_ADD_ON_LOADED, GameInfoX.OnAddOnLoaded)
-EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_GUI_HIDDEN, GameInfoX.OnGuiHidden)
+-- EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_GUI_HIDDEN, GameInfoX.OnGuiHidden)
  
---EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, GameInfoX.LootMessage)
-EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_BEGIN_LOCKPICK, function() 
-	--d("Begin lockpick")
-end)
+
+-- --EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, GameInfoX.LootMessage)
+-- EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_BEGIN_LOCKPICK, function() 
+-- 	--d("Begin lockpick")
+-- end)
 
 -- Register slash commands
 SLASH_COMMANDS["/rl"] = function() ReloadUI("ingame") end
 SLASH_COMMANDS["/mem"] = function() d(math.ceil(collectgarbage("count")).." KB") end
-
-
-
-
-
-
