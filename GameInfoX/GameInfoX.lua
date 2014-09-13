@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Title: GameInfo eXtended													  -
+-- Title: w33zl's GameInfo (former 'GameInfo eXtended'						  -
 -- Author: @w33zl															  -
 -- Description: Extends and tweaks the behavior of the GameInfo addon		  -
 -------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ if not GameInfoX then GameInfoX = {} end
 
 GameInfoX.Addon = {
 	Name = "GameInfoX",
-	Title = "GameInfo eXtended",
+	Title = "w33zl's GameInfo",
 	Version = "1.5",
 	Author = "@w33zl",
 	Description = ""
@@ -24,12 +24,11 @@ GameInfoX.Addon = {
 GameInfoX.DefaultSettings = {
 	SpaceInfo = true,
 	LockWindowPosition = false,
-	InventoryTransparency = 80,
+	InventoryTransparency = 50,
 	InventoryColor = "C5C29EFF",
 	PositionX = 20,
 	PositionY = 200
 }
-
  
 function GameInfoX.MoveStop()
 	GameInfoX.Settings.PositionX = GameInfoXDisplay:GetLeft()
@@ -51,19 +50,6 @@ function GameInfoX:ShowUI()
 	end
 end
 
--- function GameInfoX:BackgroundRefresh()
--- 	if GameInfoX.ShouldBeHidden() then
--- 		GameInfoX:HideUI()
--- 	else
--- 		GameInfoX:ShowUI()
--- 	end
-
--- 	--zo_callLater(function() GameInfoX:BackgroundRefresh() end, 200)
-	
--- end
-
-
-
 function GameInfoX:DoRefresh()
 	
 	if GameInfoX.ShouldBeHidden() then
@@ -73,62 +59,48 @@ function GameInfoX:DoRefresh()
 		GameInfoX:ShowUI()
 	end
 
-	-- if (GI.loaded == true) then
-	-- 	if (GI.UpdateThrottle("UpdateX", 500) == true) then
+	local usedSlots, maxSlots=PLAYER_INVENTORY:GetNumSlots(INVENTORY_BACKPACK)
+	local maxBankSlots = GetBagSize(BAG_BANK)
+	local numberOfUsedBankSlots = GetNumBagUsedSlots(BAG_BANK)
 
-			-- if GameInfoX.ShouldBeHidden() then
-			-- 	return
-			-- end
+	local warnThreshold = 5
+	local defaultColor = "FFFFFF" --GI.vars.ColorLoot
+	
+	local bankColor
+	if numberOfUsedBankSlots == maxBankSlots then
+		bankColor = "C08C8B"
+	elseif (maxBankSlots - numberOfUsedBankSlots ) <= warnThreshold then
+		bankColor = "B5AB7B"
+	end
 
-			local usedSlots, maxSlots=PLAYER_INVENTORY:GetNumSlots(INVENTORY_BACKPACK)
-			local maxBankSlots = GetBagSize(BAG_BANK)
-			local numberOfUsedBankSlots = GetNumBagUsedSlots(BAG_BANK)
+	local bagColor
+	if usedSlots == maxSlots then
+		bagColor = "C08C8B"
+	elseif (maxSlots - usedSlots ) <= warnThreshold then
+		bagColor = "B5AB7B"
+	end
 
-			local warnThreshold = 5
-			local defaultColor = "FFFFFF" --GI.vars.ColorLoot
-			
-			local bankColor
-			if numberOfUsedBankSlots == maxBankSlots then
-				bankColor = "C08C8B"
-			elseif (maxBankSlots - numberOfUsedBankSlots ) <= warnThreshold then
-				bankColor = "B5AB7B"
-			end
+	local bankSlotText
+	if bankColor == nil then
+		bankSlotText = numberOfUsedBankSlots
+	else
+		bankSlotText =  "|c" .. bankColor .. numberOfUsedBankSlots .. "|r"
+	end
 
-			local bagColor
-			if usedSlots == maxSlots then
-				bagColor = "C08C8B"
-			elseif (maxSlots - usedSlots ) <= warnThreshold then
-				bagColor = "B5AB7B"
-			end
+	local bagSlotText
+	if bagColor == nil then
+		bagSlotText = usedSlots
+	else
+		bagSlotText =  "|c" .. bagColor .. usedSlots .. "|r"
+	end
 
-			local bankSlotText
-			if bankColor == nil then
-				bankSlotText = numberOfUsedBankSlots
-			else
-				bankSlotText =  "|c" .. bankColor .. numberOfUsedBankSlots .. "|r"
-			end
+	GameInfoXDisplayBankCount:SetText(bankSlotText .. " / ".. maxBankSlots)
+	GameInfoXDisplayCount:SetText(bagSlotText .. " / ".. maxSlots)
 
-			local bagSlotText
-			if bagColor == nil then
-				bagSlotText = usedSlots
-			else
-				bagSlotText =  "|c" .. bagColor .. usedSlots .. "|r"
-			end
-
-			GameInfoXDisplayBankCount:SetText(bankSlotText .. " / ".. maxBankSlots)
-			GameInfoXDisplayCount:SetText(bagSlotText .. " / ".. maxSlots)
-
-			GameInfoXDisplay:SetAlpha(0.5)
-
-	-- 	end
-	-- end
+	GameInfoXDisplay:SetAlpha(0.5)
 end
 
--- Next we create a function that will initialize our addon
 function GameInfoX:Initialize()
-	-- Initialize bank icon
- 	--GameInfoXDisplayBank:SetTexture("ESOUI/art/icons/servicemappins/servicepin_bank.dds")
-
 
 	GameInfoX.Settings = ZO_SavedVars:New("GIX_Config", 1, nil, GameInfoX.DefaultSettings)
 
@@ -138,15 +110,8 @@ function GameInfoX:Initialize()
 		GameInfoXDisplay:SetMovable(true)
 	end
 
-
- 	-- Override original update handler from GameInfo to be able to adjust some behaviors
- 	--GameInfoDisplay:SetHandler("OnUpdate", GameInfoX.Update)
-
  	-- We are all set!
 	d(GameInfoX.Addon.Name .. " " .. GameInfoX.Addon.Version .. " loaded!")
-
-
-	--zo_callLater(function() GameInfoX:BackgroundRefresh() end, 100)
 
 	EVENT_MANAGER:RegisterForUpdate("GameInfoX_Update",500,function() GameInfoX:DoRefresh() end)
 end
