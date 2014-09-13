@@ -81,7 +81,7 @@ function GameInfoX.Update()
 			end
 
 
-			GI.Update()
+			GI.PanelUpdate()
 			local usedSlots, maxSlots=PLAYER_INVENTORY:GetNumSlots(INVENTORY_BACKPACK)
 			local maxBankSlots = GetBagSize(BAG_BANK)
 			local numberOfUsedBankSlots = GetNumBagUsedSlots(BAG_BANK)
