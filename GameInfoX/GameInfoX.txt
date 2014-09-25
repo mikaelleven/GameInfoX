@@ -1,19 +1,23 @@
-## Title: |cE8C529GameInfo eXtended|r |cC5C29Ev1.0|r
-## Version: 1.0
-## LastUpdated: July 27, 2014
+## Title: |c000000|r|cFF00AAw33zl's |cE8C529GameInfo|r |c75735ev1.6.1|r
 ## Author: @w33zl
-## Description: Extends the |cC5C29EGameInfo|r addon with bank slots and other tweaks of the behavior
+## Description: |cFF00AAw33zl's|r |cE8C529GameInfo|r replaces the bag and bank slot info from |cC5C29EGame Information|r
 ## License: 
 
-## OptionalDependsOn: BugEater
-## DependsOn: GameInfo
+## Version: 1.6.1
+## LastUpdated: September 25, 2014
 
-## APIVersion: 100007
+## APIVersion: 100009
+
+;## OptionalDependsOn: BugEater
+
+## SavedVariables: GIX_Config
+
 
 ; This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. The Elder Scrolls® and related logos are registered trademarks or trademarks of ZeniMax Media Inc. in the United States and/or other countries. All rights reserved.
 
-GameInfoX.lua
 GameInfoX.xml
+GameInfoX.lua
+
 
 
 
