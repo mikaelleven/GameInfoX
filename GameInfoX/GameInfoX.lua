@@ -16,7 +16,7 @@ if not GameInfoX then GameInfoX = {} end
 GameInfoX.Addon = {
 	Name = "GameInfoX",
 	Title = "w33zl's GameInfo",
-	Version = "1.6.1",
+	Version = "1.7",
 	Author = "@w33zl",
 	Description = ""
 }
@@ -114,6 +114,8 @@ function GameInfoX:Initialize()
 	d(GameInfoX.Addon.Name .. " " .. GameInfoX.Addon.Version .. " loaded!")
 
 	EVENT_MANAGER:RegisterForUpdate("GameInfoX_Update",500,function() GameInfoX:DoRefresh() end)
+
+
 end
  
 -- Then we create an event handler function which will be called when the "addon loaded" event
@@ -135,7 +137,7 @@ function GameInfoX.OnGuiHidden(eventCode, guiName, hidden)
 	--d("Gui hidden")
 end
 
- 
+
 -- Finally, we'll register our event handler functions to be called when the proper events occurs.
 EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_ADD_ON_LOADED, GameInfoX.OnAddOnLoaded)
 -- EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_GUI_HIDDEN, GameInfoX.OnGuiHidden)
@@ -149,3 +151,13 @@ EVENT_MANAGER:RegisterForEvent(GameInfoX.name, EVENT_ADD_ON_LOADED, GameInfoX.On
 -- Register slash commands
 SLASH_COMMANDS["/rl"] = function() ReloadUI("ingame") end
 SLASH_COMMANDS["/mem"] = function() d(math.ceil(collectgarbage("count")).." KB") end
+
+
+-- SAVE FOR LATER
+-- EVENT_MANAGER:RegisterForEvent("GI", EVENT_OPEN_BANK, GI.BankOpen)
+-- EVENT_MANAGER:RegisterForEvent("GI", EVENT_CLOSE_BANK, GI.BankClose)
+
+
+-- GAMEINFO3 FIX: prevent Game Information addon from showing bank status even if it's disabled in the settings
+EVENT_MANAGER:UnregisterForEvent("GI", EVENT_OPEN_BANK)
+EVENT_MANAGER:UnregisterForEvent("GI", EVENT_CLOSE_BANK)
